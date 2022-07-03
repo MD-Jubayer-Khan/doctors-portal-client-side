@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import servicesData from '../../ServicesData/services.json'
+// import servicesData from '../../ServicesData/services.json'
 import React, { useEffect, useState } from 'react';
 import Service from './Service';
 import BookingModal from './BookingModal';
@@ -8,7 +8,12 @@ const AvailableAppointment = ({date}) => {
     const [services, setServices] = useState([]);
     const [treatment, setTreatment] = useState(null)
 
-    useEffect(()=>setServices(servicesData), [])
+    // useEffect(()=>setServices(servicesData), [])
+    useEffect(()=>{
+        fetch('http://localhost:5000/service')
+        .then(res => res.json())
+        .then(data => setServices(data))
+    },[])
 
     return (
         <div>
