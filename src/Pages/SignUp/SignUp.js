@@ -1,19 +1,21 @@
 import React from 'react';
 import auth from '../../firebase.init'
 import { useForm } from "react-hook-form";
-import { useSignInWithGoogle, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const SignUp = () => {
+    
     const [signInWithGoogle, gUser] = useSignInWithGoogle(auth);
     const { register, handleSubmit, formState: { errors } }= useForm();
 
     const [
-      signInWithEmailAndPassword,
-      user,
-      loading,
-      error,
-    ] = useSignInWithEmailAndPassword(auth);
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+      ] = useCreateUserWithEmailAndPassword(auth);
+
     let errorElement;  
     
     if(gUser){
@@ -29,15 +31,34 @@ const Login = () => {
     }
     const onSubmit = data => {
         console.log(data);
-        signInWithEmailAndPassword(data.email, data.password)
+        createUserWithEmailAndPassword(data.email, data.password)
     };
 
     return (
         <div className=' flex justify-center items-center mt-20'>
            <div className="card w-96 bg-base-100 shadow-xl">
               <div className="card-body">
-                <h2 className="text-center text-2xl font-bold">Login</h2>
+                <h2 className="text-center text-2xl font-bold">Sign Up</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="form-control w-full max-w-xs">
+                      <label className="label">
+                        <span className="label-text">Name</span>
+                      </label>
+                      <input 
+                      {...register("name", { 
+                        required:{
+                            value: true,
+                            message: 'name required'
+                        }
+                    })}
+                      type="name" placeholder="Enter your name" 
+                      className="input input-bordered w-full max-w-xs" />
+                      <label className="label">
+                        {errors.name?.type === 'required' &&  <span class="label-text-alt text-red-500">{errors.name.message}</span>} 
+                       
+                      </label>
+                    </div>
+
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">Email</span>
@@ -62,6 +83,7 @@ const Login = () => {
                        
                       </label>
                     </div>
+
 
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
@@ -88,8 +110,8 @@ const Login = () => {
                       </label>
                     </div>
                     {errorElement}
-                       <input className='btn w-full max-w-xs' type="submit" value="Login"/>
-                      <small>  <p className='mt-4'>New to doctors portal?  <Link to="/signup" className='text-secondary'> Sign up</Link></p></small>
+                       <input className='btn w-full max-w-xs' type="submit" value="Sign Up"/>
+                      <small>  <p className='mt-4'>Already have an account?  <Link to="/Login" className='text-secondary'> Login</Link></p></small>
                     </form>
                    
                 <div className="divider">OR</div>
@@ -103,4 +125,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default SignUp;
