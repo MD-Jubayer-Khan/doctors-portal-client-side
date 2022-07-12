@@ -3,10 +3,9 @@ import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { toast } from 'react-toastify';
-import { success } from 'daisyui/src/colors';
 
 
-const BookingModal = ({date, treatment, setTreatment}) => {
+const BookingModal = ({date, treatment, setTreatment, refetch}) => {
     const {_id, name, slots} = treatment;
     const [user] = useAuthState(auth);
     const formattedDate = format(date, 'PP')
@@ -45,6 +44,7 @@ const BookingModal = ({date, treatment, setTreatment}) => {
 
         })
 
+        refetch()
         setTreatment(null);
 
     };
