@@ -14,8 +14,12 @@ const Navbar = () => {
             <li><Link to="/reviews">Reviews</Link></li>
             <li><Link to="/contact">Contact</Link></li>
             <li><Link to="/about">About</Link></li>
+
+              {
+                user && <li><Link to="/dashboard">Dashboard</Link></li>
+              }
             <li>{user ? <button className='btn btn-ghost' onClick={()=> signOut(auth)}>Sign Out</button> :<Link to="/login">Login</Link>}</li>
-  </>
+                  </>
 
     return (
           <div className="navbar bg-base-100 mt-2">
@@ -34,6 +38,9 @@ const Navbar = () => {
               <ul className="menu menu-horizontal p-0 lg:ml-">
                   {menuItm}
               </ul>
+            </div>
+            <div className="navbar-end">
+            <label for="my-drawer-2" class="btn btn-primary bg-gradient-to-r from-secondary to-primary drawer-button lg:hidden">Open drawer</label>
             </div>
           </div>
     );
