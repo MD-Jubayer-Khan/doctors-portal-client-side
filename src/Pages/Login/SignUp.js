@@ -2,7 +2,8 @@ import React from 'react';
 import auth from '../../firebase.init'
 import { useForm } from "react-hook-form";
 import { useSignInWithGoogle, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     
@@ -16,14 +17,14 @@ const SignUp = () => {
         error,
       ] = useCreateUserWithEmailAndPassword(auth);
 
+      const [token] = useToken(user || gUser)
+
     let errorElement;  
     
-    const location = useLocation();
     const navigate = useNavigate();
-    const from = location.state?.from?.pathname
     
-    if(gUser || user){
-        navigate(from, { replace: true})
+    if(token){
+        navigate('/appointment')
     };
 
     if(error){
