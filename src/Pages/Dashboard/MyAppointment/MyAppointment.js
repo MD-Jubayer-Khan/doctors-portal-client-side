@@ -1,5 +1,7 @@
+import { signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { Navigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 
 const MyAppointment = () => {
@@ -8,12 +10,27 @@ const MyAppointment = () => {
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/booking?patient=${user.email}`)
-                .then(res => res.json())
-                .then(data => setAppointments(data));
+            fetch(`http://localhost:5000/booking?patient=${user.email}`, {
+                method: 'GET',
+                headers: {
+                    'authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            })
+                .then(res => {
+                    console.log('res', res);
+                    if (res.status === 401 || res.status === 403) {
+                        signOut(auth);
+                        localStorage.removeItem('accessToken');
+                        Navigate('/');
+                    }
+                    return res.json()
+                })
+                .then(data => {
+
+                    setAppointments(data);
+                });
         }
     }, [user])
-
     return (
         <div className='mx-7 mt-8'>
             <div class="overflow-x-auto">
