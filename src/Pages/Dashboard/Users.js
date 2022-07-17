@@ -9,6 +9,7 @@ const Users = () => {
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     }).then(res => res.json()));
+    
     if (isLoading) {
         return <p>Loading...</p>
     }

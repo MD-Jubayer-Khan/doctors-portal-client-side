@@ -1,11 +1,18 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from 'react-query';
 
 const AddDoctor = () => {
-    const { register, handleSubmit, formState: { errors } }= useForm();
+    const { register, handleSubmit, reset, formState: { errors } }= useForm();
+    const {data: services, isLoading,} = useQuery('services', ()=> fetch('http://localhost:5000/service').then(res => res.json()))
+     
+    if(isLoading){
+      return <p>Loading...</p>
+    }
 
     const onSubmit = async data => {
             console.log('data', data);
+            reset()
     };
 
     return (
@@ -60,19 +67,30 @@ const AddDoctor = () => {
 
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
-                        <span className="label-text">Password</span>
+                        <span className="label-text">Specialty</span>
+                      </label>
+                      <select {...register("specialty")} className="select input-bordered w-full max-w-xs mb-4">
+                               {
+                                services.map((service)=> <option key={service._id} value={service.name}> {service.name}</option>)
+                               }
+                             </select>     
+                    </div>
+
+                    <div className="form-control w-full max-w-xs">
+                      <label className="label">
+                        <span className="label-text">Photo</span>
                       </label>
                       <input 
-                      {...register("specialty", { 
+                      {...register("image", { 
                         required:{
                             value: true,
-                            message: 'specialty required'
-                        }                  
+                            message: 'image required'
+                        }
                     })}
-                      type="text" placeholder="Enter your specialty" 
-                      className="input input-bordered w-full max-w-xs" />
+                      type="file"
+                      className="input input-bordered w-full max-w-xs p-2" />
                       <label className="label">
-                        {errors.specialty?.type === 'required' &&  <span class="label-text-alt text-red-500">{errors.specialty.message}</span>} 
+                        {errors.image?.type === 'required' &&  <span class="label-text-alt text-red-500">{errors.image.message}</span>} 
                        
                       </label>
                     </div>
