@@ -1,39 +1,40 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import UserRow from './UserRow';
+import DoctorRow from './DoctorRow';
 
-const Users = () => {
-    const { data: users, isLoading, refetch } = useQuery('users', () => fetch('http://localhost:5000/user', {
-        method: 'GET',
+const ManageDoctor = () => {
+    const {data: doctors, isLoading, refetch} = useQuery('doctors', ()=> fetch('http://localhost:5000/doctor',{
         headers:{
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
     }).then(res => res.json()));
-    
-    if (isLoading) {
+
+    if(isLoading){
         return <p>Loading...</p>
     }
     return (
         <div>
-            <h2 className="text-2xl">All Users: {users.length}</h2>
+            <h2 className="text-2xl">All Users: {doctors.length}</h2>
             <div class="overflow-x-auto">
                 <table class="table w-full">
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Avatar</th>
                             <th>Name</th>
-                            <th>Job</th>
-                            <th>Favorite Color</th>
+                            <th>Email</th>
+                            <th>Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
                        {
-                           users.map((user, index)=><UserRow
-                           key={user._id}
-                           user={user}
+                           doctors.map((doctor, index)=><DoctorRow
+                           key={doctor._key}
+                           doctor={doctor}
                            index={index}
                            refetch={refetch}
-                           ></UserRow>)
+                           ></DoctorRow>)
                        }
                     </tbody>
                 </table>
@@ -42,4 +43,4 @@ const Users = () => {
     );
 };
 
-export default Users;
+export default ManageDoctor;
